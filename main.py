@@ -1,5 +1,5 @@
 # The IE Experience - A text-based adventure game
-# Created by: Daniel Rosel, ...
+# Created by: India Antunez, Isabel de Valenzuela, Daniel Rosel, ...
 # This is a game in which the player gets to experience the life of a student at IE University studying in Segovia. The player will have to make decisions that will affect the outcome of the game (and their life at IE University). As they progress through the game, they will be able to choose between different options that will lead them to different paths. The player will be able to interact with other characters and objects in the game. The game will end when the player has completed all the tasks and has reached the end of the game.
 # Tasks: Sleeping, Eating, Studying, Socializing, Going to the Gym, Going to the Library
 # Objects: Schedule, Phone, Coffee, Snack, Laptop, Water
@@ -7,6 +7,7 @@
 # Rooms: Kitchen, Walk to campus, Cafeteria, Classroom, Library, Gym, Bedroom
 # The code must be modular !
 # Importing all the necessary modules
+
 import time
 import random
 import sys
