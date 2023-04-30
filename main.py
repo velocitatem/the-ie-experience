@@ -19,6 +19,7 @@ stdscr = curses.initscr() # create a new screen
 curses.noecho()
 curses.cbreak()
 
+# Defining the backpack class
 class Backpack:
     def __init__(self):
         self.items = []
@@ -32,7 +33,7 @@ class Backpack:
     def remove_item(self, item):
         self.items.remove(item)
 
-
+# Defining a Player
 class Player:
     def __init__(self, name, health, knowledge, will_to_live, hunger):
         self.name = name
@@ -54,11 +55,13 @@ class Player:
             "hunger": self.hunger,
             "current_room": self.current_room
         }
-
+    
+    # Defining basic functionalities of player
+    
     # Each of the following must also check if the player is in the correct room
     # Also must handle cases where the player does not have the item in their backpack
     # Also must handle cases if status is full
-
+    
     def check_status_range(self, status):
         if status < 0:
             return 0
@@ -67,10 +70,9 @@ class Player:
         else:
             return status
 
-
     def eat(self, food):
         # TODO - decrease hunger
-        pass
+        pass                            # pass is a placeholder for code that has npt yet been implemented
 
     def drink(self, drink):
         # TODO - decrease thirst
@@ -101,8 +103,9 @@ class Player:
     def go_to_cafeteria(self):
         # TODO - decrease hunger, increase will to live
         pass
+    
 
-
+# Defining possible input commands
 def eval_command(command, player):
     command_map = {
         "eat": player.eat,
@@ -116,16 +119,15 @@ def eval_command(command, player):
         return (player)
     else:
         return (player, "Invalid command")
-
-
-
+    
+# Clearing the status bar (graphically?)
 def update_status_bar(player, scr):
-    # clear the status bar
     for i in range(20):
         scr.addstr(i, 0, " " * 100)
     for i, key in enumerate(player.get_status().keys()):
         scr.addstr(i, 0, f"{key}: {player.get_status()[key]}")
 
+# Typing the input 
 def get_input_string(scr):
     curses.echo()
     curses.curs_set(1)
@@ -133,7 +135,6 @@ def get_input_string(scr):
     curses.noecho()
     curses.curs_set(0)
     return str(user_input, "utf-8")
-
 
 
 
@@ -146,8 +147,11 @@ def get_input_string(scr):
 #              |
 #          Cafeteria
 # that is the general layout of the game
+
+
+# Drawing the map (visual rep)
 def draw_map(player, scr):
-    # draw a 2d map of the rooms
+    # draw a 2D map of the rooms
     # the player is in the middle
     # create a square to represent the current room
     # create a line to represent the path to the next room
@@ -169,12 +173,6 @@ def draw_map(player, scr):
             else:
                 scr.addstr(i, 50 + j * 10, f" {room} ")
 
-
-
-
-
-
-
 def main(stdscr):
     stdscr.clear()
 
@@ -191,10 +189,10 @@ def main(stdscr):
     stdscr.addstr(1, 0, "You are a student at IE University in Segovia. You have to make decisions that will affect the outcome of the game (and your life at IE University). As you progress through the game, you will be able to choose between different options that will lead you to different paths. You will be able to interact with other characters and objects in the game. The game will end when you have completed all the tasks and have reached the end of the game.")
 
     # create the player
-    player = Player("Daniel", 50, 50, 50, 50)
+    player = Player("Peter", 50, 50, 50, 50)
 
     rooms = ["Kitchen", "Walk to campus", "Cafeteria", "Classroom", "Library", "Gym", "Bedroom"]
-    player.current_room = random.choice(rooms)
+    player.current_room = random.choice(rooms) 
 
     # create the items
     items = ["Schedule", "Phone", "Coffee", "Snack", "Laptop", "Water"]
@@ -207,8 +205,6 @@ def main(stdscr):
     # add input box at the bottom of the screen
     stdscr.addstr(20, 0, "Input: ") # add the input box
     stdscr.refresh()
-
-
 
     # begin game loop
     while True:
