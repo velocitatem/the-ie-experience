@@ -1,2 +1,8 @@
-
+from graphics import *
 # Initial screen drawing
+
+
+
+
+
+# Functions we need
