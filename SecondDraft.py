@@ -76,6 +76,7 @@ class Person():
     def get_location(self):
         return ROOM_MATRIX[self.location[1]][self.location[0]]
 
+
 class GreetingWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="The IE Experience")
