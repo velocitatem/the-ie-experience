@@ -1,3 +1,6 @@
+
+from puzzles import classroom_puzzle
+
 caf_and_kitchen = [
     {'name': "Snack", 'action': lambda person: person.increase('health', 5), 'action_name': 'eat'},
     {'name': "Water", 'action': lambda person: person.increase('health', 5), 'action_name': 'drink'},
@@ -35,7 +38,8 @@ ROOMS = [
         ],
         'cover': 'classroom.png',
         'task': {
-            'name': "Write code"
+            'name': "write code",
+            'action': classroom_puzzle,
         },
         "description": "This is the CSAI classroom where the magic takes place. Its a bit smelly...\n"
     },

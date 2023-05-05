@@ -189,6 +189,7 @@ class GameWindow(Gtk.Window):
             description = f"{room_object['description']}\nIn this room you can...\n{actions_list}"
             # show a dialog box with the description
             dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Room Description")
+            # add text to show what the user can do (puzzles)
             dialog.format_secondary_text(description)
             dialog.run()
             dialog.destroy()
