@@ -1,6 +1,7 @@
 from game_configuration import ROOM_MATRIX
 class Person():
     def __init__(self):
+        # define the person's attributes at the start of the game
         self.health = 20
         self.knowledge = 20
         self.will_to_live = 20
@@ -18,6 +19,7 @@ class Person():
         return self
 
     def get_status_report(self):
+        # return a list of lists of the person's attributes
         return [
             ["Health", self.health],
             ["Knowledge", self.knowledge],
@@ -25,8 +27,10 @@ class Person():
         ]
 
     def grab(self, item):
+        # add item to inventory
         self.inventory.append(item)
         return self
 
     def get_location(self):
+        # get the room the person is in (text name)
         return ROOM_MATRIX[self.location[1]][self.location[0]]

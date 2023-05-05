@@ -66,7 +66,8 @@ ROOMS = [
         ],
         'cover': 'bedroom.png',
         'description': "This is your bedroom. Here you can rest and relax and more ;)"
-    }
+    },
+    # Extra rooms:
 ]
 
 ROOM_MATRIX = [

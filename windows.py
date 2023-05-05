@@ -86,8 +86,10 @@ class GameWindow(Gtk.Window):
         self.set_border_width(10)
         # set dimension of window 500 by 500
         self.set_default_size(700, 500)
+        # Create the window that will be used to display the cover image for each room
         self.cover_image = CoverImageWindow()
 
+        # initialize the person Object for the game
         self.person = Person()
 
         self.grid = Gtk.Grid()
@@ -141,7 +143,7 @@ class GameWindow(Gtk.Window):
         self.grid.attach(self.position_label, 0, 1, 1, 1)
 
 
-
+    # method to move the person to a different room based on the direction
     def move_rooms(self, direction):
         # north, south, east, west
         if direction in ["north", "south"]:
@@ -155,6 +157,7 @@ class GameWindow(Gtk.Window):
 
     def on_input(self, value):
         value = value.get_text()
+        # process the input
         value = value.lower().strip().split(" ")
         if value[0] == "go":
             self.move_rooms(value[1])
@@ -165,9 +168,11 @@ class GameWindow(Gtk.Window):
             print(room_object)
 
             if 'cover' in room_object.keys():
+                # update the cover image
                 self.cover_image.set_image(room_object['name'], room_object['cover'])
                 self.cover_image.show_all()
             else:
+                # if we don't have a cover image, hide the cover image window
                 self.cover_image.hide_window()
 
         elif value[0] == "drink":
@@ -179,7 +184,9 @@ class GameWindow(Gtk.Window):
         elif value[:1] == ["pick", "up"]:
             pass
         elif value[0] == "look":
+            # get the room object of the current room
             room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
+            # Prepare the description of the room string
             actions_list = ""
             for action in room_object['objects']:
                 actions_list += str(action['action_name'].lower()
@@ -191,5 +198,6 @@ class GameWindow(Gtk.Window):
             dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Room Description")
             # add text to show what the user can do (puzzles)
             dialog.format_secondary_text(description)
+            # run the dialog box
             dialog.run()
             dialog.destroy()

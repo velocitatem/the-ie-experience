@@ -7,6 +7,7 @@ from gi.repository import Gtk
 from windows import GreetingWindow
 
 def main():
+    # Create a new window to greet the user
     win = GreetingWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
