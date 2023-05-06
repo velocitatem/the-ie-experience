@@ -13,7 +13,7 @@ ROOMS = [
         'action': lambda person: person,
         'cover': "kitchen.png",
         'objects': [
-            {'name': "Pan", 'action': lambda person: person.increase('health', 5), 'action_name': 'use'},
+            {'name': "Pan", 'action': lambda person: person.increase('health', 5), 'action_name': 'take'},
             *caf_and_kitchen
         ],
         'description': "You are in the kitchen. Here you recharge and enjoy some food."
