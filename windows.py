@@ -4,7 +4,7 @@ from gi.repository import Gtk
 
 # internal dependencies
 from person import Person
-from game_configuration import ROOMS, ROOM_MATRIX
+from game_configuration import ROOMS, ROOM_MATRIX, PUZZLES
 
 class GreetingWindow(Gtk.Window):
     def __init__(self):
@@ -193,11 +193,8 @@ class GameWindow(Gtk.Window):
                 # add to user inventory
                 if value[2] == item['name']:
                     self.person.grab(item)
-                    # hangle the item existing or picked up in here
-
-
-
-
+                    # remove item from room
+                    room_object['objects'].remove(item)
 
 
             pass
@@ -224,3 +221,8 @@ class GameWindow(Gtk.Window):
             # run the dialog box
             dialog.run()
             dialog.destroy()
+
+        elif value[:1] == ['complete', 'puzzle']:
+            # TODO Implement
+            if value[2] in PUZZLES.keys():
+                pass

@@ -73,3 +73,19 @@ ROOM_MATRIX = [
     [ 'Kitchen', "Cafeteria", "Classroom" ],
     [ "Bedroom", "Library", "Gym" ]
 ]
+
+PUZZLES= {
+        'classroom': {
+            'requirements': ['laptop', 'coffee'],
+            'puzzle': classroom_puzzle
+        },
+        'kitchen': {
+            'requirements': ['pan'],
+            'puzzle': kitchen_puzzle
+        },
+        'gym': {
+            'requirements': ['gym clothes'],
+            'puzzle': gym_puzzle
+        }
+
+    }
