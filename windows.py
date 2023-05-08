@@ -159,6 +159,7 @@ class GameWindow(Gtk.Window):
         value = value.get_text()
         # process the input
         value = value.lower().strip().split(" ")
+        room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
         if value[0] == "go":
             self.move_rooms(value[1])
             # update position label
@@ -176,24 +177,46 @@ class GameWindow(Gtk.Window):
                 self.cover_image.hide_window()
 
         elif value[0] == "drink":
+            # TODO Implement
             pass
         elif value[0] == "eat":
+            # TODO Implement
             pass
         elif value[0] == "use":
+            # TODO Implement
             pass
         elif value[:1] == ["pick", "up"]:
+            # TODO Implement
+
+            for items in [item for item in room_object['objects'] if item['action_name'] == 'pick up']:
+                # TODO check if item has not been picked up
+                # add to user inventory
+                if value[2] == item['name']:
+                    self.person.grab(item)
+                    # hangle the item existing or picked up in here
+
+
+
+
+
+
             pass
         elif value[0] == "look":
             # get the room object of the current room
-            room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
+
             # Prepare the description of the room string
             actions_list = ""
+
             for action in room_object['objects']:
                 actions_list += str(action['action_name'].lower()
                 + " " + action['name'].lower()
                 + "\n")
 
+
+
+
             description = f"{room_object['description']}\nIn this room you can...\n{actions_list}"
+
             # show a dialog box with the description
             dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Room Description")
             # add text to show what the user can do (puzzles)
