@@ -1,9 +1,9 @@
-
+from puzzles import classroom_puzzle, kitchen_puzzle, gym_puzzle
 
 caf_and_kitchen = [
-    {'name': "Snack", 'action': lambda person: person.increase('health', 5), 'action_name': 'eat'},
-    {'name': "Water", 'action': lambda person: person.increase('health', 5), 'action_name': 'drink'},
-    {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 5), 'action_name': 'drink'},
+    {'name': "Snack", 'action': lambda person: person.increase('health', 15), 'action_name': 'eat'},
+    {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
+    {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 20), 'action_name': 'drink'},
 ]
 
 ROOMS = [
@@ -12,8 +12,10 @@ ROOMS = [
         'action': lambda person: person,
         'cover': "kitchen.png",
         'objects': [
-            {'name': "Pan", 'action': lambda person: person.increase('health', 5), 'action_name': 'take'},
-            *caf_and_kitchen
+            {'name': "Pan", 'action_name': 'pick up'},
+            *caf_and_kitchen,
+            {'name': "Banana", 'action': lambda person: person.increase('health', 20), 'action_name': 'eat'},
+            {'Cookie': "Cookie", 'action': lambda person: person.increase('health', 20), 'action_name': 'eat'}
         ],
         'description': "You are in the kitchen. Here you recharge and enjoy some food."
     },
@@ -21,7 +23,6 @@ ROOMS = [
         'name': "Cafeteria",
         'action': lambda person: person,
         'objects': [
-            {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 5), 'action_name': 'drink'},
             *caf_and_kitchen
         ],
         'description': "You are in the cafeteria, your favorite plane. Here you can enjoy some food and coffee and socialize (if you can)",
@@ -32,8 +33,8 @@ ROOMS = [
         'name': "Classroom",
         'action': lambda person: person.increase('knowledge', 10).increase('will_to_live', -5),
         'objects': [
-            {'name': "Laptop", 'action': lambda person: person.increase('knowledge', 5), 'action_name': 'use'},
-            {'name': "Water", 'action': lambda person: person.increase('health', 5), 'action_name': 'drink'}
+            {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
+            {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 30), 'action_name': 'drink'},
         ],
         'cover': 'classroom.png',
         'task': {
@@ -60,8 +61,8 @@ ROOMS = [
         'name': "Bedroom",
         'action': lambda person: person.increase('will_to_live', 5).increase('health', 5),
         'objects': [
-            {'name': "Phone", 'action': lambda person: person.grab(), 'action_name': 'pick up'},
-            {'name': "Laptop", 'action': lambda person: person.increase('knowledge', 5), 'action_name': 'pick up'}
+            {'name': "Phone", 'action_name': 'pick up'},
+            {'name': "Laptop", 'action_name': 'pick up'}
         ],
         'cover': 'bedroom.png',
         'description': "This is your bedroom. Here you can rest and relax and more ;)"

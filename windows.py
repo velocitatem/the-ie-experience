@@ -1,10 +1,13 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+import sys
 
 # internal dependencies
 from person import Person
 from game_configuration import ROOMS, ROOM_MATRIX, PUZZLES
+from helpers import items_to
+
 
 class GreetingWindow(Gtk.Window):
     def __init__(self):
@@ -91,6 +94,7 @@ class GameWindow(Gtk.Window):
 
         # initialize the person Object for the game
         self.person = Person()
+        self.history = ['look']
 
         self.grid = Gtk.Grid()
         # add grid to window
@@ -107,7 +111,28 @@ class GameWindow(Gtk.Window):
 
         # input handler
         self.input.connect("activate", self.on_input)
+        # on arrow key up pressed
+        self.input.connect("key-press-event", self.on_key_press_event)
 
+
+        self.paint_status_bar()
+        # paint inventory
+        self.paint_inventory()
+
+        # show text for the position under the status bar
+        self.position_label = Gtk.Label()
+        self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
+        self.position_label.set_halign(Gtk.Align.CENTER)
+        self.position_label.set_valign(Gtk.Align.CENTER)
+        self.grid.attach(self.position_label, 0, 1, 1, 1)
+
+    def on_key_press_event(self, widget, event):
+        if event.keyval == 65362:
+            self.input.set_text(self.history[-1])
+
+
+
+    def paint_status_bar(self):
         # set status bar
         self.status_bar = Gtk.Grid()
         self.status_bar.set_size_request(500, 100)
@@ -127,7 +152,6 @@ class GameWindow(Gtk.Window):
             # add padding to status bar (left and right)
             self.status_bar.set_column_spacing(10)
 
-
         # add status bar to grid
         self.status_bar.set_halign(Gtk.Align.CENTER)
         self.status_bar.set_valign(Gtk.Align.CENTER)
@@ -135,12 +159,50 @@ class GameWindow(Gtk.Window):
         self.grid.attach(self.status_bar, 0, 0, 1, 1)
         self.grid.set_halign(Gtk.Align.CENTER)
 
-        # show text for the position under the status bar
-        self.position_label = Gtk.Label()
-        self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
-        self.position_label.set_halign(Gtk.Align.CENTER)
-        self.position_label.set_valign(Gtk.Align.CENTER)
-        self.grid.attach(self.position_label, 0, 1, 1, 1)
+    def update_status_bar(self):
+        # remove status bar
+        self.grid.remove(self.status_bar)
+        # repaint status bar
+        self.paint_status_bar()
+        self.show_all()
+
+
+    def paint_inventory(self):
+        # create a horizontally scrollable grid on the bottom of the screen
+        self.inventory_grid = Gtk.Grid()
+        self.inventory_grid.set_size_request(500, 100)
+        self.inventory_grid.set_halign(Gtk.Align.CENTER)
+        self.inventory_grid.set_valign(Gtk.Align.CENTER)
+        # add padding to inventory grid (left and right)
+        self.inventory_grid.set_column_spacing(10)
+        # add inventory grid to main grid
+        self.grid.attach(self.inventory_grid, 0, 3, 1, 1)
+        # padding top
+        self.grid.set_row_spacing(100)
+
+
+        # create a label for the inventory
+        self.inventory_label = Gtk.Label()
+        self.inventory_label.set_markup("<span font_desc='20'>Inventory:</span>")
+        self.inventory_label.set_halign(Gtk.Align.CENTER)
+        self.inventory_label.set_valign(Gtk.Align.CENTER)
+        self.inventory_grid.attach(self.inventory_label, 0, 0, 1, 1)
+        # add all the items in the inventory to the inventory grid
+        for index, item in enumerate(self.person.inventory):
+            self.inventory_item_label = Gtk.Label()
+            self.inventory_item_label.set_markup("<span font_desc='10'>" + item['name'] + "</span>")
+            self.inventory_item_label.set_halign(Gtk.Align.CENTER)
+            self.inventory_item_label.set_valign(Gtk.Align.CENTER)
+            self.inventory_grid.attach(self.inventory_item_label, index, 1, 1, 1)
+
+    def update_inventory(self):
+        # remove the inventory grid
+        self.grid.remove(self.inventory_grid)
+        # repaint the inventory grid
+        self.paint_inventory()
+        # show all the widgets
+        self.show_all()
+
 
 
     # method to move the person to a different room based on the direction
@@ -154,12 +216,24 @@ class GameWindow(Gtk.Window):
             self.person.location[0] = (self.person.location[0] - 1) % 3
 
 
+    def alert(self, message):
+        # create a dialog
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, message)
+        # run the dialog
+        dialog.run()
+        # destroy the dialog
+        dialog.destroy()
+
+
 
     def on_input(self, value):
         value = value.get_text()
-        # process the input
+        self.input.set_text("")
+        self.history.append(value)
         value = value.lower().strip().split(" ")
         room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
+        print(value)
         if value[0] == "go":
             self.move_rooms(value[1])
             # update position label
@@ -177,26 +251,46 @@ class GameWindow(Gtk.Window):
                 self.cover_image.hide_window()
 
         elif value[0] == "drink":
-            # TODO Implement
-            pass
-        elif value[0] == "eat":
-            # TODO Implement
-            pass
-        elif value[0] == "use":
-            # TODO Implement
-            pass
-        elif value[:1] == ["pick", "up"]:
-            # TODO Implement
+            drinks_in_room = items_to(room_object['objects'], "action_name", "drink")
+            if len(drinks_in_room) == 0:
+                self.alert("There are no drinks in this room")
+                return
+            for drink in drinks_in_room:
+                if value[1] == drink['name'].lower():
+                    # remove item from room
+                    room_object['objects'].remove(drink)
+                    drink['action'](self.person)
+                    self.update_status_bar()
 
-            for items in [item for item in room_object['objects'] if item['action_name'] == 'pick up']:
+        elif value[0] == "eat":
+            food_in_room = items_to(room_object['objects'], "action_name", "eat")
+            if len(food_in_room) == 0:
+                self.alert("There is no food in this room")
+                return
+            for food in food_in_room:
+                if value[1] == food['name'].lower():
+                    # remove item from room
+                    room_object['objects'].remove(food)
+                    food['action'](self.person)
+                    self.update_status_bar()
+
+        elif value[:2] == ["pick", "up"]:
+
+            items_in_room = items_to(room_object['objects'], "action_name", "pick up")
+            if len(items_in_room) == 0:
+                self.alert("There are no items in this room")
+                return
+            for item in items_in_room:
+                print(item)
                 # TODO check if item has not been picked up
                 # add to user inventory
-                if value[2] == item['name']:
+                if value[2] == item['name'].lower():
                     self.person.grab(item)
                     # remove item from room
                     room_object['objects'].remove(item)
-
-
+                    print(f"Item {item['name']} picked up")
+                    # update inventory
+                    self.update_inventory()
             pass
         elif value[0] == "look":
             # get the room object of the current room
@@ -208,12 +302,9 @@ class GameWindow(Gtk.Window):
                 actions_list += str(action['action_name'].lower()
                 + " " + action['name'].lower()
                 + "\n")
-
-
-
-
             description = f"{room_object['description']}\nIn this room you can...\n{actions_list}"
-
+            if room_object['name'].lower() in PUZZLES.keys():
+                description += f"\nThere is also a puzzle in this room."
             # show a dialog box with the description
             dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Room Description")
             # add text to show what the user can do (puzzles)
@@ -223,6 +314,10 @@ class GameWindow(Gtk.Window):
             dialog.destroy()
 
         elif value[:1] == ['complete', 'puzzle']:
-            # TODO Implement
             if value[2] in PUZZLES.keys():
+                # TODO
                 pass
+
+        elif value[0] in ['exit', 'die', 'bye']:
+            # some game over thing
+            sys.exit(0)
