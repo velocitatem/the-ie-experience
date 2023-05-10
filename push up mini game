@@ -15,8 +15,7 @@ class Button:
         self.active = True
         self.txt = None
 
-        # appearance of the button (location + color)
-
+    # appearance of the button (location + color)
     def appearance(self):
         rect = Rectangle(Point(self.a, self.b), Point(self.a2, self.b2))
         rect.setFill(self.color)
