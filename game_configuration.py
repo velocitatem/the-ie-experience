@@ -15,7 +15,7 @@ ROOMS = [
             {'name': "Pan", 'action_name': 'pick up'},
             *caf_and_kitchen,
             {'name': "Banana", 'action': lambda person: person.increase('health', 20), 'action_name': 'eat'},
-            {'Cookie': "Cookie", 'action': lambda person: person.increase('health', 20), 'action_name': 'eat'}
+            {'name': "Cookie", 'action': lambda person: person.increase('health', 20), 'action_name': 'eat'}
         ],
         'description': "You are in the kitchen. Here you recharge and enjoy some food."
     },

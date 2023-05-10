@@ -293,11 +293,7 @@ class GameWindow(Gtk.Window):
                     self.update_inventory()
             pass
         elif value[0] == "look":
-            # get the room object of the current room
-
-            # Prepare the description of the room string
             actions_list = ""
-
             for action in room_object['objects']:
                 actions_list += str(action['action_name'].lower()
                 + " " + action['name'].lower()
