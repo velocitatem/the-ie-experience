@@ -75,6 +75,11 @@ ROOM_MATRIX = [
     [ "Bedroom", "Library", "Gym" ]
 ]
 
+
+BUGS = [
+    ""
+]
+
 PUZZLES= {
         'classroom': {
             'requirements': ['laptop', 'coffee'],
