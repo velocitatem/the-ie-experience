@@ -196,6 +196,9 @@ class GameWindow(Gtk.Window):
             self.inventory_grid.attach(self.inventory_item_label, index, 1, 1, 1)
 
     def update_inventory(self):
+        """
+        This method updates the inventory grid.
+        """
         # remove the inventory grid
         self.grid.remove(self.inventory_grid)
         # repaint the inventory grid
@@ -207,6 +210,11 @@ class GameWindow(Gtk.Window):
 
     # method to move the person to a different room based on the direction
     def move_rooms(self, direction):
+        """
+        This method moves the person to a different room based on the direction.
+        Arguments:
+            direction (str): The direction to move the person in.
+        """
         # north, south, east, west
         if direction in ["north", "south"]:
             self.person.location[1] = not (self.person.location[1] == 1)
@@ -217,6 +225,11 @@ class GameWindow(Gtk.Window):
 
 
     def alert(self, message):
+        """
+        This method displays an alert with a message.
+        Arguments:
+            message (str): The message to be displayed in the alert.
+        """
         # create a dialog
         dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,
             Gtk.ButtonsType.OK, message)
@@ -228,6 +241,11 @@ class GameWindow(Gtk.Window):
 
 
     def on_input(self, value):
+        """
+        This method is called when the user presses enter in the input field of the window.
+        Arguments:
+            value (Gtk.Entry): The input field of the window.
+        """
         value = value.get_text()
         self.input.set_text("")
         self.history.append(value)
@@ -284,7 +302,7 @@ class GameWindow(Gtk.Window):
                 print(item)
                 # TODO check if item has not been picked up
                 # add to user inventory
-                if value[2] == item['name'].lower():
+                if " ".join(value[2:]) == item['name'].lower():
                     self.person.grab(item)
                     # remove item from room
                     room_object['objects'].remove(item)
@@ -309,10 +327,16 @@ class GameWindow(Gtk.Window):
             dialog.run()
             dialog.destroy()
 
-        elif value[:1] == ['complete', 'puzzle']:
-            if value[2] in PUZZLES.keys():
-                # TODO
-                pass
+        elif value[:2] == ['complete', 'puzzle']:
+            roomPuzzleKey = room_object['name'].lower()
+            if roomPuzzleKey in PUZZLES.keys():
+                puzzle = PUZZLES[roomPuzzleKey]
+                # check if puzzle.requirements are in the user inventory
+                conditions = [req.lower() in [item['name'].lower() for item in self.person.inventory] for req in puzzle['requirements']]
+                if all(conditions):
+                    puzzle['puzzle']()
+                else:
+                    self.alert("You don't have the requirements to complete this puzzle")
 
         elif value[0] in ['exit', 'die', 'bye']:
             # some game over thing

@@ -151,7 +151,7 @@ class MemoryGame:
 
             self.win.getMouse()
 
-
-win = GraphWin("Memory Game", 500, 700)
-game = MemoryGame(win)
-game.draw_grid()
+if __name__ == "__main__":
+    win = GraphWin("Memory Game", 500, 700)
+    game = MemoryGame(win)
+    game.draw_grid()

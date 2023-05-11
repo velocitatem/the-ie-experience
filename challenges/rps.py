@@ -78,6 +78,8 @@ class RockPaperScissors:
         time.sleep(3)
         end_text.undraw()
 
-win = GraphWin("Rock Paper Scissors", 500, 700)
-game = RockPaperScissors(win)
-game.run()
+
+def kitchen_puzzle():
+    win = GraphWin("Rock Paper Scissors", 500, 700)
+    game = RockPaperScissors(win)
+    game.run()

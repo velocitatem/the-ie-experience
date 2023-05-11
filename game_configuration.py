@@ -54,6 +54,10 @@ ROOMS = [
         'name': "Gym",
         'action': lambda person: person.increase('health', 10).increase('will_to_live', 5),
         'description': "Lets get those gains!",
+        'objects': [
+            {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
+            {'name': "Protein", 'action': lambda person: person.increase('health', 20), 'action_name': 'drink'},
+        ],
         'cover': 'gym.png'
 
     },
@@ -62,7 +66,8 @@ ROOMS = [
         'action': lambda person: person.increase('will_to_live', 5).increase('health', 5),
         'objects': [
             {'name': "Phone", 'action_name': 'pick up'},
-            {'name': "Laptop", 'action_name': 'pick up'}
+            {'name': "Laptop", 'action_name': 'pick up'},
+            {'name': "Gym clothes", 'action_name': 'pick up'}
         ],
         'cover': 'bedroom.png',
         'description': "This is your bedroom. Here you can rest and relax and more ;)"
@@ -76,22 +81,23 @@ ROOM_MATRIX = [
 ]
 
 
-BUGS = [
-    ""
-]
+from challenges import pushup, capitals, debug, memory, rps
 
 PUZZLES= {
         'classroom': {
-            'requirements': ['laptop', 'coffee'],
-            'puzzle': classroom_puzzle
+            'requirements': ['laptop'],
+            'puzzle': debug.classroom_puzzle,
+            'teaser': "You will probably need to use your laptop and coffee to solve this puzzle."
         },
         'kitchen': {
             'requirements': ['pan'],
-            'puzzle': kitchen_puzzle
+            'puzzle': rps.kitchen_puzzle,
+            'teaser': "You will probably need to use your pan to solve this puzzle."
         },
         'gym': {
             'requirements': ['gym clothes'],
-            'puzzle': gym_puzzle
+            'puzzle': pushup.gym_puzzle,
+            'teaser': "You will probably need to use your gym clothes to solve this puzzle."
         }
 
     }

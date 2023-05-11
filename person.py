@@ -5,7 +5,7 @@ class Person():
         self.health = 20
         self.knowledge = 20
         self.will_to_live = 20
-        self.location = [0, 0]
+        self.location = [2, 1]
         self.inventory = []
 
     def increase(self, attribute, amount):
