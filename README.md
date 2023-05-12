@@ -12,3 +12,6 @@ Images:
 ## TODO
 + [ ] Add a method `run()` to each of the challenge files
 + [ ] Add score verification into the user score in `person.py`
++ [ ] Mention the python version has to be 3.10
++ [ ] Try running it on windows
++ [ ] Record a version of it running
