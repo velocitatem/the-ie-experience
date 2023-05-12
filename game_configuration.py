@@ -63,7 +63,7 @@ ROOMS = [
             {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
             {'name': "Protein shake", 'action': lambda person: person.increase('health', 20), 'action_name': 'drink'},
         ],
-        'description': "Welcome to the gym. Time to burn those calories! Here you can complete a push up challenge!."
+        'description': "Welcome to the gym. Time to burn those calories! Here you can complete a push up challenge!.",
         'cover': 'gym.png'
 
     },
