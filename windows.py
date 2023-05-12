@@ -132,6 +132,8 @@ class GameWindow(Gtk.Window):
         self.position_label.set_valign(Gtk.Align.CENTER)
         self.grid.attach(self.position_label, 0, 1, 1, 1)
 
+        self.cover_open(self.get_room_object())
+
     def on_key_press_event(self, widget, event):
         if event.keyval == 65362:
             self.input.set_text(self.history[-1])
@@ -244,7 +246,17 @@ class GameWindow(Gtk.Window):
         # destroy the dialog
         dialog.destroy()
 
+    def cover_open(self, room_object):
+        if 'cover' in room_object.keys():
+            # update the cover image
+            self.cover_image.set_image(room_object['name'], room_object['cover'])
+            self.cover_image.show_all()
+        else:
+            # if we don't have a cover image, hide the cover image window
+            self.cover_image.hide_window()
 
+    def get_room_object(self):
+        return [room for room in ROOMS if room['name'] == self.person.get_location()][0]
 
     def on_input(self, value):
         """
@@ -252,11 +264,15 @@ class GameWindow(Gtk.Window):
         Arguments:
             value (Gtk.Entry): The input field of the window.
         """
+        score = self.person.get_score()
+        if score > 80:
+            self.alert("You have won the game!\Your score is: " + str(score))
+            return
         value = value.get_text()
         self.input.set_text("")
         self.history.append(value)
         value = value.lower().strip().split(" ")
-        room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
+        room_object = self.get_room_object()
         print(value)
         if value[0] == "go":
             self.move_rooms(value[1])
@@ -265,14 +281,8 @@ class GameWindow(Gtk.Window):
             # show the cover image
             room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
             print(room_object)
+            self.cover_open(room_object)
 
-            if 'cover' in room_object.keys():
-                # update the cover image
-                self.cover_image.set_image(room_object['name'], room_object['cover'])
-                self.cover_image.show_all()
-            else:
-                # if we don't have a cover image, hide the cover image window
-                self.cover_image.hide_window()
 
         elif value[0] == "drink":
             drinks_in_room = items_to(room_object['objects'], "action_name", "drink")
@@ -333,7 +343,7 @@ class GameWindow(Gtk.Window):
             dialog.run()
             dialog.destroy()
 
-        elif value[:2] == ['complete', 'puzzle']:
+        elif value[0] == "play":
             roomPuzzleKey = room_object['name'].lower()
             if roomPuzzleKey in PUZZLES.keys():
                 puzzle = PUZZLES[roomPuzzleKey]
@@ -341,6 +351,8 @@ class GameWindow(Gtk.Window):
                 conditions = [req.lower() in [item['name'].lower() for item in self.person.inventory] for req in puzzle['requirements']]
                 if all(conditions):
                     puzzle['puzzle']()
+                    puzzle['solved'](self.person)
+                    self.update_status_bar()
                 else:
                     self.alert("You don't have the requirements to complete this puzzle")
 

@@ -34,3 +34,7 @@ class Person():
     def get_location(self):
         # get the room the person is in (text name)
         return ROOM_MATRIX[self.location[1]][self.location[0]]
+
+    def get_score(self):
+        # return average of attributes
+        return (self.health + self.knowledge + self.will_to_live) / 3

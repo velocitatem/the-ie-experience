@@ -5,7 +5,7 @@ coffee =  {'name': "Coffee", 'action': lambda person: person.increase('will_to_l
 caf_and_kitchen = [
     {'name': "Snack", 'action': lambda person: person.increase('health', 15), 'action_name': 'eat'},
     {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
-    coffee
+    *coffee
 ]
 
 # room list with their respective description and elements (what you can do in the room)
@@ -36,7 +36,7 @@ ROOMS = [
         'action': lambda person: person.increase('knowledge', 10).increase('will_to_live', -5),
         'objects': [
             {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
-            coffee
+            *coffee
         ],
         'cover': 'classroom.png',
         'task': {
@@ -50,7 +50,7 @@ ROOMS = [
         'action': lambda person: person.increase('knowledge', 5),
         'cover': 'library.png',
         'objects': [
-            coffee
+            *coffee
         ],
         'description': "This is the library. Here you can study and get some work done."
 
@@ -94,17 +94,20 @@ PUZZLES= {
         'classroom': {
             'requirements': ['laptop'],
             'puzzle': debug.classroom_puzzle,
-            'teaser': "You will probably need to use your laptop and coffee to solve this puzzle."
+            'teaser': "You will probably need to use your laptop and coffee to solve this puzzle.",
+            'solved': lambda person: person.increase('knowledge', 60)
         },
         'kitchen': {
             'requirements': ['pan'],
             'puzzle': rps.kitchen_puzzle,
-            'teaser': "You will probably need to use your pan to solve this puzzle."
+            'teaser': "You will probably need to use your pan to solve this puzzle.",
+            'solved': lambda person: person.increase('health', 30)
         },
         'gym': {
             'requirements': ['gym clothes'],
             'puzzle': pushup.gym_puzzle,
-            'teaser': "You will probably need to use your gym clothes to solve this puzzle."
+            'teaser': "You will probably need to use your gym clothes to solve this puzzle.",
+            'solved': lambda person: person.increase('health', 50)
         }
 
     }
