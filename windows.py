@@ -110,6 +110,12 @@ class GameWindow(Gtk.Window):
         self.grid.attach(self.input, 0, 2, 1, 1)
 
         # input handler
+        def on_input_handler(event):
+            try:
+                self.on_input(event)
+            except Exception as e:
+                print(e)
+
         self.input.connect("activate", self.on_input)
         # on arrow key up pressed
         self.input.connect("key-press-event", self.on_key_press_event)
@@ -341,3 +347,5 @@ class GameWindow(Gtk.Window):
         elif value[0] in ['exit', 'die', 'bye']:
             # some game over thing
             sys.exit(0)
+        else:
+            self.alert("I don't understand that command")

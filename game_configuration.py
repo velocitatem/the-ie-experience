@@ -1,9 +1,11 @@
 from puzzles import classroom_puzzle, kitchen_puzzle, gym_puzzle
 
+coffee =  {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 20), 'action_name': 'drink'},
+
 caf_and_kitchen = [
     {'name': "Snack", 'action': lambda person: person.increase('health', 15), 'action_name': 'eat'},
     {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
-    {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 20), 'action_name': 'drink'},
+    coffee
 ]
 
 ROOMS = [
@@ -34,7 +36,7 @@ ROOMS = [
         'action': lambda person: person.increase('knowledge', 10).increase('will_to_live', -5),
         'objects': [
             {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
-            {'name': "Coffee", 'action': lambda person: person.increase('will_to_live', 30), 'action_name': 'drink'},
+            coffee
         ],
         'cover': 'classroom.png',
         'task': {
@@ -47,6 +49,9 @@ ROOMS = [
         'name': "Library",
         'action': lambda person: person.increase('knowledge', 5),
         'cover': 'library.png',
+        'objects': [
+            coffee
+        ],
         'description': "This is the library. Here you can study and get some work done."
 
     },
