@@ -8,6 +8,7 @@ caf_and_kitchen = [
     coffee
 ]
 
+# room list with their respective description and elements (what you can do in the room)
 ROOMS = [
     {
         'name': "Kitchen",
@@ -29,7 +30,6 @@ ROOMS = [
         ],
         'description': "You are in the cafeteria, your favorite plane. Here you can enjoy some food and coffee and socialize (if you can)",
         'cover': 'cafeteria.png'
-
     },
     {
         'name': "Classroom",
@@ -43,7 +43,7 @@ ROOMS = [
             'name': "write code",
             'action': None
         },
-        "description": "This is the CSAI classroom where the magic takes place. Its a bit smelly...\n"
+        "description": "This is the CSAI classroom where the magic takes place. Its a bit smelly...\n. "
     },
     {
         'name': "Library",
@@ -61,8 +61,9 @@ ROOMS = [
         'description': "Lets get those gains!",
         'objects': [
             {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
-            {'name': "Protein", 'action': lambda person: person.increase('health', 20), 'action_name': 'drink'},
+            {'name': "Protein shake", 'action': lambda person: person.increase('health', 20), 'action_name': 'drink'},
         ],
+        'description': "Welcome to the gym. Time to burn those calories! Here you can complete a push up challenge!."
         'cover': 'gym.png'
 
     },
@@ -80,12 +81,13 @@ ROOMS = [
     # Extra rooms:
 ]
 
+# room map (used to create the representation of the room layout in 2D)
 ROOM_MATRIX = [
     [ 'Kitchen', "Cafeteria", "Classroom" ],
     [ "Bedroom", "Library", "Gym" ]
 ]
 
-
+# adding the challenges to the respetcive rooms
 from challenges import pushup, capitals, debug, memory, rps
 
 PUZZLES= {
