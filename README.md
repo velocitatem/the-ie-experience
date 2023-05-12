@@ -10,6 +10,5 @@ Images:
 
 
 ## TODO
-
-+ [ ] Puzzles WTF
-+ [ ]
++ [ ] Add a method `run()` to each of the challenge files
++ [ ] Add score verification into the user score in `person.py`
