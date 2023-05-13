@@ -8,10 +8,3 @@ Images:
 + Cafeteria at IE university in the stype of pixel art console game aesthetic. With a character standing. View from the top. The character is a man with dark hair and a blue shirt.
 + Student bedroom in the stype of pixel art console game aesthetic. With a character standing. View from the top. The character is a man with dark hair and a blue shirt.
 
-
-## TODO
-+ [ ] Add a method `run()` to each of the challenge files
-+ [ ] Add score verification into the user score in `person.py`
-+ [ ] Mention the python version has to be 3.10
-+ [ ] Try running it on windows
-+ [ ] Record a version of it running
