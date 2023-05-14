@@ -278,6 +278,7 @@ class GameWindow(QMainWindow):
             description = f"{room_object['description']}\nIn this room you can...\n{actions_list}"
             if room_object['name'].lower() in PUZZLES.keys():
                 description += f"\nThere is also a puzzle in this room."
+                description += PUZZLES[room_object['name'].lower()]['teaser']
             # show a dialog box with the description
             dialog = QMessageBox(self)
             dialog.setText(description)
