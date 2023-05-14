@@ -130,6 +130,10 @@ class GameWindow(QMainWindow):
         # status bar must always be at the top of the screen
         self.status_bar.move(0, 0)
         self.layout().addWidget(self.status_bar)
+        score = self.person.get_score()
+        if score > 80:
+            self.alert("You have won the game!\nYour score is: " + str(score))
+            return
 
 
 
@@ -206,10 +210,8 @@ class GameWindow(QMainWindow):
         """
         # get the value of the input field
         value = self.input.text()
-        score = self.person.get_score()
-        if score > 80:
-            self.alert("You have won the game!\Your score is: " + str(score))
-            return
+
+
         self.input.setText("")
         self.history.append(value)
         value = value.lower().strip().split(" ")
