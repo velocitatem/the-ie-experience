@@ -299,7 +299,7 @@ class GameWindow(QMainWindow):
 
                 if all(conditions):
                     try:
-                        puzzle.run()
+                        puzzle['puzzle']()
                         puzzle['solved'](self.person)
                         self.update_status_bar()
                     except Exception as e:

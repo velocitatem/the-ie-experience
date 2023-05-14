@@ -99,13 +99,13 @@ PUZZLES = {
         },
         'kitchen': {
             'requirements': ['pan'],
-            'puzzle': rps.kitchen_puzzle,
+            'puzzle': rps.run,
             'teaser': "You will probably need to use your pan to solve this puzzle.",
             'solved': lambda person: person.increase('health', 30)
         },
         'gym': {
             'requirements': ['gym clothes'],
-            'puzzle': pushup.gym_puzzle,
+            'puzzle': pushup.run,
             'teaser': "You will probably need to use your gym clothes to solve this puzzle.",
             'solved': lambda person: person.increase('health', 50)
         }
