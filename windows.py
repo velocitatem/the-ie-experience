@@ -1,5 +1,3 @@
-import gi
-
 # internal dependencies
 from person import Person
 from game_configuration import ROOMS, ROOM_MATRIX, PUZZLES
