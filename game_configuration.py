@@ -90,10 +90,10 @@ ROOM_MATRIX = [
 # adding the challenges to the respetcive rooms
 from challenges import pushup, capitals, debug, memory, rps
 
-PUZZLES= {
+PUZZLES = {
         'classroom': {
             'requirements': ['laptop'],
-            'puzzle': debug.classroom_puzzle,
+            'puzzle': debug.run, # random.choice([debug.run, memory.run, capitals.run])
             'teaser': "You will probably need to use your laptop and coffee to solve this puzzle.",
             'solved': lambda person: person.increase('knowledge', 60)
         },

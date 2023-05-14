@@ -293,9 +293,10 @@ class GameWindow(QMainWindow):
                 puzzle = PUZZLES[roomPuzzleKey]
                 # check if puzzle.requirements are in the user inventory
                 conditions = [req.lower() in [item['name'].lower() for item in self.person.inventory] for req in puzzle['requirements']]
+
                 if all(conditions):
                     try:
-                        puzzle['puzzle']()
+                        puzzle.run()
                         puzzle['solved'](self.person)
                         self.update_status_bar()
                     except Exception as e:
