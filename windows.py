@@ -291,9 +291,13 @@ class GameWindow(QMainWindow):
                 # check if puzzle.requirements are in the user inventory
                 conditions = [req.lower() in [item['name'].lower() for item in self.person.inventory] for req in puzzle['requirements']]
                 if all(conditions):
-                    puzzle['puzzle']()
-                    puzzle['solved'](self.person)
-                    self.update_status_bar()
+                    try:
+                        puzzle['puzzle']()
+                        puzzle['solved'](self.person)
+                        self.update_status_bar()
+                    except Exception as e:
+                        print(e)
+
                 else:
                     self.alert("You don't have the requirements to complete this puzzle")
 
