@@ -1,218 +1,163 @@
 import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
-import sys
 
 # internal dependencies
 from person import Person
 from game_configuration import ROOMS, ROOM_MATRIX, PUZZLES
 from helpers import items_to
 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QLineEdit, QProgressBar, QGridLayout, QGroupBox, QRadioButton, QMessageBox, QHBoxLayout
+from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import Qt
+import sys
 
-class GreetingWindow(Gtk.Window):
+
+class GreetingWindow(QMainWindow):
     def __init__(self):
-        super().__init__(title="The IE Experience")
-        self.set_border_width(10)
-        # set dimension of window 500 by 500
-        self.set_default_size(500, 700)
+        super().__init__()
+        self.setWindowTitle("The IE Experience")
+        self.setFixedSize(500, 500)
+        self.setStyleSheet("background-image: url('IE.png');")
 
-        # set background image of window
-        self.image = Gtk.Image()
-        self.image.set_from_file("IE.png")
-        # crop image to 500 by 500
-        self.image.set_pixel_size(500)
-        # set image opactity to 0.6
-        # make new grid
-        self.grid = Gtk.Grid()
-        # add image to grid at top
-        self.grid.attach(self.image, 0, 0, 1, 1)
 
-        # add a label and button to start the game - font size 20 padding top and bottom 10
-        self.label = Gtk.Label()
-        self.label.set_size_request(500, 100)
-        self.label.set_margin_top(10)
-        self.label.set_margin_bottom(10)
-        self.label.set_markup("<span font_desc='20'>Welcome to the IE Experience!\nPress the button to start the game.</span>")
+        # Create a central widget and set its layout
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.setSpacing(10)
 
-        self.button = Gtk.Button(label="Start Game")
-        self.button.connect("clicked", self.start_game)
-        # set button size to 100 by 50
-        self.button.set_size_request(100, 50)
-        # TODO set button color via css
-        # hex: 00338d
+        # Create the label and set its properties
+        self.label = QLabel("Welcome to the IE Experience!\nPress the button to start the game.", self)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setFont(QFont("Arial", 20))
+        layout.addWidget(self.label)
 
-        # horizontal center the label and button
-        self.label.set_halign(Gtk.Align.CENTER)
-        self.button.set_halign(Gtk.Align.CENTER)
+        # Create the button and set its properties
+        self.button = QPushButton("Start Game", self)
+        self.button.clicked.connect(self.start_game)
+        self.button.setFixedSize(100, 50)
+        layout.addWidget(self.button)
 
-        # add label and button to grid
-        self.grid.attach(self.label, 0, 500, 1, 1)
-        self.grid.attach(self.button, 0, 501, 1, 1)
-        # add grid to window
-        self.add(self.grid)
+    def start_game(self):
+        # Close the greeting window
+        self.close()
 
-    def start_game(self, button):
-        # close the greeting window
-        self.destroy()
-        # open the game window
+        # Open the game window
         self.game = GameWindow()
-        self.game.connect("destroy", Gtk.main_quit)
-        self.game.show_all()
-        Gtk.main()
+        self.game.show()
 
-class CoverImageWindow(Gtk.Window):
+
+class CoverImageWindow(QMainWindow):
     def __init__(self):
-        super().__init__(title="The IE Experience")
-        self.set_border_width(0)
-        self.image = None
+        super().__init__()
+        self.setWindowTitle("The IE Experience")
+        self.setFixedSize(600, 600)
+        self.label = None
 
     def set_image(self, name, file):
         # if we already have a cover image, remove it
-        if self.image is not None:
-            self.remove(self.image)
-        self.image = Gtk.Image()
-        self.image.set_from_file(file)
-        self.add(self.image)
-        self.show_all()
-        # show window after we set the image
+        if self.label is not None:
+            self.label.setParent(None)
+            self.label.deleteLater()
+        self.label = QLabel(self)
+        pixmap = QPixmap(file)
+        self.label.setPixmap(pixmap)
+        self.setCentralWidget(self.label)
         self.show()
 
     def hide_window(self):
         self.hide()
 
-    def close(self):
+    def closeEvent(self, event):
         self.destroy()
 
-class GameWindow(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="The IE Experience - Game")
-        self.set_border_width(10)
-        # set dimension of window 500 by 500
-        self.set_default_size(700, 500)
-        # Create the window that will be used to display the cover image for each room
-        self.cover_image = CoverImageWindow()
 
-        # initialize the person Object for the game
+class GameWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("The IE Experience - Game")
+        self.setFixedSize(700, 500)
+
+        self.cover_image = CoverImageWindow()
         self.person = Person()
         self.history = ['look']
 
-        self.grid = Gtk.Grid()
-        # add grid to window
-        self.add(self.grid)
+        # Create a central widget and set its layout
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.setSpacing(10)
 
-        # set input
-        self.input = Gtk.Entry()
-        self.input.set_size_request(500, 50)
-        self.input.set_placeholder_text("Enter your command here")
-        # position input at bottom of window
-        self.input.set_halign(Gtk.Align.CENTER)
-        # add input to grid
-        self.grid.attach(self.input, 0, 2, 1, 1)
+        # Create the input field
+        self.input = QLineEdit(self)
+        self.input.setFixedSize(500, 50)
+        self.input.setPlaceholderText("Enter your command here")
+        self.input.returnPressed.connect(self.on_input) # When the user presses enter, call on_input
+        layout.addWidget(self.input)
 
-        # input handler
-        def on_input_handler(event):
-            try:
-                self.on_input(event)
-            except Exception as e:
-                print(e)
+        # Create the position label
+        self.position_label = QLabel(self)
+        self.position_label.setAlignment(Qt.AlignCenter)
+        self.position_label.setFixedSize(500, 100)
+        layout.addWidget(self.position_label)
 
-        self.input.connect("activate", self.on_input)
-        # on arrow key up pressed
-        self.input.connect("key-press-event", self.on_key_press_event)
+        self.update_status_bar()
+        self.update_inventory()
 
-
-        self.paint_status_bar()
-        # paint inventory
-        self.paint_inventory()
-
-        # show text for the position under the status bar
-        self.position_label = Gtk.Label()
-        self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
-        self.position_label.set_halign(Gtk.Align.CENTER)
-        self.position_label.set_valign(Gtk.Align.CENTER)
-        self.grid.attach(self.position_label, 0, 1, 1, 1)
-
+        self.paint_position_label()
         self.cover_open(self.get_room_object())
 
-    def on_key_press_event(self, widget, event):
-        if event.keyval == 65362:
-            self.input.set_text(self.history[-1])
 
-
-
-    def paint_status_bar(self):
-        # set status bar
-        self.status_bar = Gtk.Grid()
-        self.status_bar.set_size_request(500, 100)
-        # crate progress bars for health, knowledge, will to live
-        for index, status in enumerate(self.person.get_status_report()):
-            status_name = status[0]
-            status_value = status[1]
-            # create label for status name
-            self.status_name_label = Gtk.Label()
-            self.status_name_label.set_markup("<span font_desc='20'>" + status_name + "</span>")
-            # create progress bar for status value
-            self.status_value_progress_bar = Gtk.ProgressBar()
-            self.status_value_progress_bar.set_fraction(status_value / 100)
-            # add label and progress bar to status bar
-            self.status_bar.attach(self.status_name_label, index, 0, 1, 1)
-            self.status_bar.attach(self.status_value_progress_bar, index, 1, 1, 1)
-            # add padding to status bar (left and right)
-            self.status_bar.set_column_spacing(10)
-
-        # add status bar to grid
-        self.status_bar.set_halign(Gtk.Align.CENTER)
-        self.status_bar.set_valign(Gtk.Align.CENTER)
-
-        self.grid.attach(self.status_bar, 0, 0, 1, 1)
-        self.grid.set_halign(Gtk.Align.CENTER)
+    def paint_position_label(self):
+        self.position_label.setText(f"You are in the {self.person.get_location()}")
 
     def update_status_bar(self):
-        # remove status bar
-        self.grid.remove(self.status_bar)
-        # repaint status bar
-        self.paint_status_bar()
-        self.show_all()
+        if dir(self).count('status_bar') > 0:
+            self.status_bar.deleteLater()
+        # we create status bars for all the user stats and add them to the layout
+        # the staus bars are all in a horizontal layout
+        self.status_bar = QGroupBox(self)
+        self.status_bar.setFixedSize(700, 100)
+
+        self.status_bar.move(0, 300)
+        status_layout = QVBoxLayout(self.status_bar)
+        for stat in self.person.get_status_report(): # get_status_report returns a list of lits (name, vlaue)
+
+            stat_layout = QHBoxLayout()
+            stat_layout.addWidget(QLabel(stat[0], self.status_bar))
+            stat_layout.addWidget(QProgressBar(self.status_bar))
+            stat_layout.itemAt(1).widget().setValue(stat[1])
+            status_layout.addLayout(stat_layout)
+        # status bar must always be at the top of the screen
+        self.status_bar.move(0, 0)
+        self.layout().addWidget(self.status_bar)
 
 
-    def paint_inventory(self):
-        # create a horizontally scrollable grid on the bottom of the screen
-        self.inventory_grid = Gtk.Grid()
-        self.inventory_grid.set_size_request(500, 100)
-        self.inventory_grid.set_halign(Gtk.Align.CENTER)
-        self.inventory_grid.set_valign(Gtk.Align.CENTER)
-        # add padding to inventory grid (left and right)
-        self.inventory_grid.set_column_spacing(10)
-        # add inventory grid to main grid
-        self.grid.attach(self.inventory_grid, 0, 3, 1, 1)
-        # padding top
-        self.grid.set_row_spacing(100)
 
 
-        # create a label for the inventory
-        self.inventory_label = Gtk.Label()
-        self.inventory_label.set_markup("<span font_desc='20'>Inventory:</span>")
-        self.inventory_label.set_halign(Gtk.Align.CENTER)
-        self.inventory_label.set_valign(Gtk.Align.CENTER)
-        self.inventory_grid.attach(self.inventory_label, 0, 0, 1, 1)
-        # add all the items in the inventory to the inventory grid
-        for index, item in enumerate(self.person.inventory):
-            self.inventory_item_label = Gtk.Label()
-            self.inventory_item_label.set_markup("<span font_desc='10'>" + item['name'] + "</span>")
-            self.inventory_item_label.set_halign(Gtk.Align.CENTER)
-            self.inventory_item_label.set_valign(Gtk.Align.CENTER)
-            self.inventory_grid.attach(self.inventory_item_label, index, 1, 1, 1)
+
+
+
+
 
     def update_inventory(self):
-        """
-        This method updates the inventory grid.
-        """
-        # remove the inventory grid
-        self.grid.remove(self.inventory_grid)
-        # repaint the inventory grid
-        self.paint_inventory()
-        # show all the widgets
-        self.show_all()
+        if dir(self).count('inventory_grid') > 0:
+            self.inventory_grid.deleteLater()
+        self.inventory_grid = QWidget(self)
+        self.inventory_grid.setFixedSize(500, 100)
+        # must must be at the bottom of the screen
+        self.inventory_grid.move(0, 400)
+        # center it on the screen
+
+
+        inventory_layout = QVBoxLayout(self.inventory_grid)
+        self.inventory_label = QLabel("Inventory:", self.inventory_grid)
+        inventory_layout.addWidget(self.inventory_label)
+        for item in self.person.inventory:
+            item_label = QLabel(item['name'], self.inventory_grid)
+            inventory_layout.addWidget(item_label)
+        self.layout().addWidget(self.inventory_grid)
 
 
 
@@ -238,19 +183,16 @@ class GameWindow(Gtk.Window):
         Arguments:
             message (str): The message to be displayed in the alert.
         """
-        # create a dialog
-        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,
-            Gtk.ButtonsType.OK, message)
-        # run the dialog
-        dialog.run()
-        # destroy the dialog
-        dialog.destroy()
+        alert = QMessageBox(self)
+        alert.setText(message)
+        alert.exec_()
+
 
     def cover_open(self, room_object):
         if 'cover' in room_object.keys():
             # update the cover image
             self.cover_image.set_image(room_object['name'], room_object['cover'])
-            self.cover_image.show_all()
+            self.cover_image.show()
         else:
             # if we don't have a cover image, hide the cover image window
             self.cover_image.hide_window()
@@ -258,18 +200,19 @@ class GameWindow(Gtk.Window):
     def get_room_object(self):
         return [room for room in ROOMS if room['name'] == self.person.get_location()][0]
 
-    def on_input(self, value):
+    def on_input(self):
         """
         This method is called when the user presses enter in the input field of the window.
         Arguments:
             value (Gtk.Entry): The input field of the window.
         """
+        # get the value of the input field
+        value = self.input.text()
         score = self.person.get_score()
         if score > 80:
             self.alert("You have won the game!\Your score is: " + str(score))
             return
-        value = value.get_text()
-        self.input.set_text("")
+        self.input.setText("")
         self.history.append(value)
         value = value.lower().strip().split(" ")
         room_object = self.get_room_object()
@@ -277,7 +220,9 @@ class GameWindow(Gtk.Window):
         if value[0] == "go":
             self.move_rooms(value[1])
             # update position label
-            self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
+            # self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
+            # in pyqt:
+            self.position_label.setText(f"You are in the {self.person.get_location()}")
             # show the cover image
             room_object = [room for room in ROOMS if room['name'] == self.person.get_location()][0]
             print(room_object)
@@ -336,12 +281,10 @@ class GameWindow(Gtk.Window):
             if room_object['name'].lower() in PUZZLES.keys():
                 description += f"\nThere is also a puzzle in this room."
             # show a dialog box with the description
-            dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Room Description")
-            # add text to show what the user can do (puzzles)
-            dialog.format_secondary_text(description)
-            # run the dialog box
-            dialog.run()
-            dialog.destroy()
+            dialog = QMessageBox(self)
+            dialog.setText(description)
+            dialog.exec_()
+
 
         elif value[0] == "play":
             roomPuzzleKey = room_object['name'].lower()
