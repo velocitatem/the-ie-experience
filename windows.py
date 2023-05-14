@@ -14,7 +14,7 @@ class GreetingWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("The IE Experience")
         self.setFixedSize(500, 500)
-        self.setStyleSheet("background-image: url('IE.png');")
+        self.setStyleSheet("background-image: url('./images/IE.png');")
 
 
         # Create a central widget and set its layout
@@ -36,6 +36,7 @@ class GreetingWindow(QMainWindow):
         self.button.setFixedSize(100, 50)
         layout.addWidget(self.button)
 
+
     def start_game(self):
         # Close the greeting window
         self.close()
@@ -43,6 +44,10 @@ class GreetingWindow(QMainWindow):
         # Open the game window
         self.game = GameWindow()
         self.game.show()
+
+        # on close, close the game window
+        self.game.destroyed.connect(self.close)
+
 
 
 class CoverImageWindow(QMainWindow):
