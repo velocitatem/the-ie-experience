@@ -224,8 +224,6 @@ class GameWindow(QMainWindow):
         print(value)
         if value[0] == "go":
             self.move_rooms(value[1])
-            # update position label
-            # self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
             # in pyqt:
             self.position_label.setText(f"You are in the {self.person.get_location()}")
             # show the cover image
