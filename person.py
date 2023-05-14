@@ -8,14 +8,23 @@ class Person():
         self.location = [2, 1]
         self.inventory = []
 
+    def __increase__(self, actual, amount):
+        if actual + amount > 100:
+            return 100
+        elif actual + amount < 0:
+            return 0
+        else:
+            return actual + amount
+
+
     def increase(self, attribute, amount):
         # TODO make sure not to go over 100 or under 0
         if attribute == "health":
-            self.health += amount
+            self.health = self.__increase__(self.health, amount)
         elif attribute == "knowledge":
-            self.knowledge += amount
+            self.knowledge = self.__increase__(self.knowledge, amount)
         elif attribute == "will_to_live":
-            self.will_to_live += amount
+            self.will_to_live = self.__increase__(self.will_to_live, amount)
         return self
 
     def get_status_report(self):
