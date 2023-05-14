@@ -3,10 +3,19 @@ import random
 
 def capitals():
     # Create a list of 15 countries and their capitals
-    countries = ["Spain", "France", "Italy", "Germany", "Netherlands", "Belgium", "Greece", "Portugal", "Denmark", "Sweden",
-                "Norway", "Finland", "Poland", "Russia", "Switzerland"]
-    capitals = ["Madrid", "Paris", "Rome", "Berlin", "Amsterdam", "Brussels", "Athens", "Lisbon", "Copenhagen", "Stockholm",
+    countries = ["Spain", "France", "Italy", "Germany", "Netherlands", "Belgium", "Greece", "Portugal", "Denmark",
+                 "Sweden",
+                 "Norway", "Finland", "Poland", "Russia", "Switzerland"]
+    capitals = ["Madrid", "Paris", "Rome", "Berlin", "Amsterdam", "Brussels", "Athens", "Lisbon", "Copenhagen",
+                "Stockholm",
                 "Oslo", "Helsinki", "Warsaw", "Moscow", "Bern"]
+
+    win = None
+    input_box = None
+    user_score = 0
+    computer_score = 0
+    score_text = None
+    countdown_text = None
 
     # Set up the graphics window
     win = GraphWin("Capital Game", 500, 700)
@@ -80,3 +89,6 @@ def capitals():
     # Wait for click before closing the window
     win.getMouse()
     win.close()
+
+def run():
+    capitals()

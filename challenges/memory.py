@@ -1,157 +1,135 @@
 from graphics import *
 import random
+import time
+import math
 
-class MemoryGame:
-    def __init__(self, win):
-        self.win = win
-        self.shapes = ["square", "circle", "triangle", "diamond", "star", "hexagon", "pentagon", "octagon"] * 2
-        self.colors = ["red", "green", "blue", "yellow", "purple"]
-        self.grid = []
-        self.selected = []
-        self.matches = 0
-        self.user_wins = 0
-        self.user_losses = 0
+class CircleFG:
+    def __init__(self, x, y, radius, color):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.color = color
 
-    def draw_grid(self):
-        for row in range(3):
-            self.grid.append([])
-            for col in range(4):
-                x = 100 + col * 100
-                y = 100 + row * 100
-                shape_type = self.shapes.pop()
-                color = self.colors[random.randint(0,4)]
-                if shape_type == "square":
-                    shape = Rectangle(Point(x - 40, y - 40), Point(x + 40, y + 40))
-                elif shape_type == "circle":
-                    shape = Circle(Point(x, y), 40)
-                elif shape_type == "triangle":
-                    shape = Polygon(Point(x, y - 40), Point(x - 40, y + 40), Point(x + 40, y + 40))
-                elif shape_type == "diamond":
-                    shape = Polygon(Point(x, y - 40), Point(x - 40, y), Point(x, y + 40), Point(x + 40, y))
-                elif shape_type == "star":
-                    shape = Polygon(Point(x, y - 40), Point(x - 20, y - 10), Point(x - 40, y + 30), Point(x, y + 10), Point(x + 40, y + 30), Point(x + 20, y - 10))
-                elif shape_type == "hexagon":
-                    shape = Polygon(Point(x - 30, y), Point(x - 15, y + 30), Point(x + 15, y + 30), Point(x + 30, y), Point(x + 15, y - 30), Point(x - 15, y - 30))
-                elif shape_type == "pentagon":
-                    shape = Polygon(Point(x, y - 40), Point(x - 40, y - 15), Point(x - 25, y + 35), Point(x + 25, y + 35), Point(x + 40, y - 15))
-                elif shape_type == "octagon":
-                    shape = Polygon(Point(x - 30, y - 30), Point(x - 30, y + 30), Point(x - 10, y + 50), Point(x + 10, y + 50), Point(x + 30, y + 30), Point(x + 30, y - 30), Point(x + 10, y - 50), Point(x - 10, y - 50))
-                shape.setFill(color)
-                shape.setOutline("black")
-                shape.draw(self.win)
-                self.grid[row].append({"shape": shape, "type": shape_type, "color": color})
 
-    def select_shape(self, shape):
-        """
-        This method is called when a shape is clicked by the user.
-        It updates the state of the game by highlighting the selected shape
-        and checking if the selected shapes match.
-        """
-        if len(self.selected) < self.num_shapes:
-            if shape not in self.selected:
-                shape.setFill("blue")
-                self.selected.append(shape)
-                if len(self.selected) == self.num_shapes:
-                    self.win.after(1000, self.check_selection)
+    def draw(self, win):
+        c = self.color
+        r = self.radius
+        circ = Circle(Point(self.x, self.y), self.radius)
+        circ.setFill(self.color)
+        circ.draw(win)
+
+    def distance(self, point):
+        x1 = point.getX()
+        y1 = point.getY()
+        return math.sqrt((self.x - x1) * 2 + (self.y - y1) * 2)
+
+    def clicked(self, point):
+        return self.distance(point) <= self.radius
+
+    def setFill(self, color):
+        self.color = color
+
+def memory_game():
+    # Set up the graphics window
+    win = GraphWin("Circle Game", 500, 700)
+
+    # Set up the score counter and display
+    user_score = 0
+    computer_score = 0
+    score_text = Text(Point(250, 50), f"User: {user_score}    Computer: {computer_score}")
+    score_text.draw(win)
+
+    # Set up the countdown message
+    countdown_text = Text(Point(250, 100), "")
+
+    # Set up the instructions
+    instructions = Text(Point(250, 300), "Click on the circle that is a different color. Get 3 right to win, 3 wrong to lose.")
+    instructions.draw(win)
+
+    # Wait for click to start the game
+    win.getMouse()
+    instructions.undraw()
+
+    # Game loop
+    while user_score < 3 and computer_score < 3:
+
+        # Choose a random circle to be the different one
+        index = random.randint(0, 9)
+
+        # Create 10 circles with a random color
+        circles = []
+        colours = ["pink", "red", "purple", "green", "blue"]
+        color = random.choice(colours)
+        for i in range(10):
+            circle = CircleFG(50 + i * 50, 500, 50, color)
+            circle.draw(win)
+            circles.append(circle)
+
+        # Set the index-th circle to be a different color
+        circles[index].setFill("orange")
+
+        # Print the circles
+        for i in range(2):
+            for j in range(5):
+                circles[i].draw(win)
+
+        # Wait for 5 seconds
+        time.sleep(5)
+
+        # Turn the circles all the same colour
+        for i in range(10):
+           circles[i].setFill("black")
+
+        for i in range(2):
+            for j in range(5):
+                circles[i].draw(win)
+
+        # Check which circle was clicked on
+        clicked_circle = None
+        while clicked_circle is None:
+            click = win.checkMouse()
+            for circle in circles:
+                if circle.clicked(click):
+                    clicked_circle = circle
+
+        # Check the answer and update the scores
+        if clicked_circle == circles[index]:
+            user_score += 1
+            score_text.setText(f"User: {user_score}    Computer: {computer_score}")
+            result_text = Text(Point(250, 400), "Correct!")
         else:
-            self.selected = []
+            computer_score += 1
+            score_text.setText(f"User: {user_score}    Computer: {computer_score}")
+            result_text = Text(Point(250, 400), "Wrong!")
+        result_text.draw(win)
 
-    def check_selection(self):
-        """
-        This method checks if the selected shapes match or not.
-        If the shapes match, they are highlighted in green and the user score is updated.
-        If the shapes don't match, they are reset to white and the user has one less chance.
-        """
-        selected_shapes = [shape.clone() for shape in self.selected]
-        self.selected = []
-        shape_types = [shape.getType() for shape in selected_shapes]
-        shape_colours = [shape.config["fill"] for shape in selected_shapes]
-        if shape_types == self.current_pattern["shapes"] and shape_colours == self.current_pattern["colours"]:
-            for shape in selected_shapes:
-                shape.setFill("green")
-                shape.setOutline("green")
-            self.matches += 1
-            if self.matches == self.num_rounds:
-                self.user_wins += 1
-                self.end_game()
-            else:
-                self.win.after(1000, self.show_pattern)
-        else:
-            for shape in selected_shapes:
-                shape.setFill("white")
-            self.chances_left -= 1
-            if self.chances_left == 0:
-                self.user_losses += 1
-                self.end_game()
-            else:
-                self.remaining_chances.setText(f"You have {self.chances_left} chances remaining.")
+        # Display the result for 2 seconds
+        time.sleep(2)
+        result_text.undraw()
 
-    def end_game(self,end=True):
-        # Undraw all the shapes on the grid
-        for row in self.grid:
-            for item in row:
-                item["shape"].undraw()
+        # Clear the circles from the screen
+        for circle in circles:
+            circle.undraw()
 
-        # Create a text object to display the final result
-        if self.user_wins == 3:
-            final_result = Text(Point(250, 300), "Congratulations! You won the game.")
-        else:
-            final_result = Text(Point(250, 300), "Game over. Better luck next time.")
-        final_result.setSize(20)
-        final_result.draw(self.win)
+        # Display countdown message
+        for i in range(3, 0, -1):
+            countdown_text.setText(f"Next round starting in {i}...")
+            time.sleep(1)
+        countdown_text.setText("")
 
-        # Close the window after 2 seconds
-        self.win.after(2000, self.win.close)
+    # Display the final message
+    if user_score == 3:
+        final_text = Text(Point(250, 400), "Congratulations, you won!")
+        final_text.draw(win)
+    elif computer_score == 3:
+        final_text = Text(Point(250, 400), "Sorry, you lost!")
+        final_text.draw(win)
 
-    def play(self):
-        while self.user_wins < 3 and self.user_losses < 3:
-            # Show message for remaining losses
-            remaining_losses = Text(Point(250, 650), f"You have {3 - self.user_losses} remaining losses.")
-            remaining_losses.setSize(18)
-            remaining_losses.draw(self.win)
+    # Wait for click before closing the window
+    win.getMouse()
+    win.close()
 
-            # Generate a list of random shapes to display
-            shapes_to_click = []
-            for i in range(6):
-                shape_type = random.choice(self.shapes)
-                color = random.choice(self.colors)
-                shape = self.generate_shape(shape_type, color)
-                shape.draw(self.win)
-                shapes_to_click.append((shape, shape_type, color))
-                time.sleep(1)
-                shape.undraw()
-                time.sleep(0.5)
+def run():
+    memory_game()
 
-            # Get user input for clicking the shapes
-            self.selected = []
-            for i in range(6):
-                click = self.win.getMouse()
-                clicked_shape = self.get_clicked_shape(click, shapes_to_click)
-                if clicked_shape:
-                    clicked_shape.setFill("blue")
-                    self.selected.append(clicked_shape)
-                else:
-                    self.user_losses += 1
-                    remaining_losses.setText(f"You have {3 - self.user_losses} remaining losses.")
-                    if self.user_losses == 3:
-                        break
-
-            # Check if user clicked the shapes in the correct order
-            if self.selected == shapes_to_click:
-                self.user_wins += 1
-                if self.user_wins == 3:
-                    self.end_game(won=True)
-            else:
-                for shape in self.selected:
-                    shape.setFill("red")
-                    time.sleep(0.5)
-                    shape.setFill(shape.color)
-                if self.user_losses == 3:
-                    self.end_game(won=False)
-
-            self.win.getMouse()
-
-if __name__ == "__main__":
-    win = GraphWin("Memory Game", 500, 700)
-    game = MemoryGame(win)
-    game.draw_grid()
+run()

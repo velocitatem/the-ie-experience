@@ -135,6 +135,10 @@ class GameWindow(QMainWindow):
         # status bar must always be at the top of the screen
         self.status_bar.move(0, 0)
         self.layout().addWidget(self.status_bar)
+        score = self.person.get_score()
+        if score > 80:
+            self.alert("You have won the game!\nYour score is: " + str(score))
+            return
 
 
 
@@ -211,10 +215,8 @@ class GameWindow(QMainWindow):
         """
         # get the value of the input field
         value = self.input.text()
-        score = self.person.get_score()
-        if score > 80:
-            self.alert("You have won the game!\Your score is: " + str(score))
-            return
+
+
         self.input.setText("")
         self.history.append(value)
         value = value.lower().strip().split(" ")
@@ -283,6 +285,7 @@ class GameWindow(QMainWindow):
             description = f"{room_object['description']}\nIn this room you can...\n{actions_list}"
             if room_object['name'].lower() in PUZZLES.keys():
                 description += f"\nThere is also a puzzle in this room."
+                description += PUZZLES[room_object['name'].lower()]['teaser']
             # show a dialog box with the description
             dialog = QMessageBox(self)
             dialog.setText(description)
@@ -295,9 +298,10 @@ class GameWindow(QMainWindow):
                 puzzle = PUZZLES[roomPuzzleKey]
                 # check if puzzle.requirements are in the user inventory
                 conditions = [req.lower() in [item['name'].lower() for item in self.person.inventory] for req in puzzle['requirements']]
+
                 if all(conditions):
                     try:
-                        puzzle['puzzle']()
+                        puzzle.run()
                         puzzle['solved'](self.person)
                         self.update_status_bar()
                     except Exception as e:

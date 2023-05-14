@@ -259,8 +259,10 @@ def gym_puzzle():
     # run async:
     txt.setFill("white")
     win.getMouse()
-    try:
-        th._stop()
-    except:
-        pass
+
     win.close()
+
+def run():
+    gym_puzzle()
+
+

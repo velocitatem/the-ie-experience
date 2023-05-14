@@ -83,3 +83,6 @@ def kitchen_puzzle():
     win = GraphWin("Rock Paper Scissors", 500, 700)
     game = RockPaperScissors(win)
     game.run()
+
+def run():
+    kitchen_puzzle()

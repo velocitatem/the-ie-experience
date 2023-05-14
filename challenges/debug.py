@@ -1,7 +1,7 @@
 from graphics import *
 import random
 
-def classroom_puzzle():
+def debug():
 
     # Set up window
     win = GraphWin("Debugging Game", 500, 700)
@@ -75,3 +75,6 @@ def classroom_puzzle():
     # Wait for mouse click before closing the window
     win.getMouse()
     win.close()
+
+def run():
+    debug()
