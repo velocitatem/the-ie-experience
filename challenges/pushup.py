@@ -240,8 +240,10 @@ def gym_puzzle():
 
 
     while push_up_count < 10:
-        p = win.getMouse()
-
+        try:
+            p = win.getMouse()
+        except Exception as e:
+            return False
         if button.clicked(p):
             gym_person.undraw()
             gym_person.down()
