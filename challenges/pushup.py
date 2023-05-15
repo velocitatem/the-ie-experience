@@ -263,6 +263,8 @@ def gym_puzzle():
     win.close()
 
 def run():
-    gym_puzzle()
+    puzzle = gym_puzzle()
+
+
 
 

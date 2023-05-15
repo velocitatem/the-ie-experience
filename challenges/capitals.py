@@ -91,4 +91,4 @@ def capitals():
     win.close()
 
 def run():
-    capitals()
+    puzzle = capitals()

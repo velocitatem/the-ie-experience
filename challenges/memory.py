@@ -130,6 +130,5 @@ def memory_game():
     win.close()
 
 def run():
-    memory_game()
+    puzzle = memory_game()
 
-run()
