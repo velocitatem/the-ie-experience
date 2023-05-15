@@ -130,5 +130,8 @@ def memory_game():
     win.close()
 
 def run():
-    puzzle = memory_game()
+    return memory_game()
+    
+if __name__ == "__main__":
+    print(run())
 

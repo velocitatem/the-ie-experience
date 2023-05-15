@@ -13,7 +13,7 @@ ROOMS = [
     {
         'name': "Kitchen",
         'action': lambda person: person,
-        'cover': "kitchen.png",
+        'cover': "./images/kitchen.png",
         'objects': [
             {'name': "Pan", 'action_name': 'pick up'},
             *caf_and_kitchen,
@@ -29,7 +29,7 @@ ROOMS = [
             *caf_and_kitchen
         ],
         'description': "You are in the cafeteria, your favorite plane. Here you can enjoy some food and coffee and socialize (if you can)",
-        'cover': 'cafeteria.png'
+        'cover': './images/cafeteria.png'
     },
     {
         'name': "Classroom",
@@ -38,7 +38,7 @@ ROOMS = [
             {'name': "Water", 'action': lambda person: person.increase('health', 10), 'action_name': 'drink'},
             *coffee
         ],
-        'cover': 'classroom.png',
+        'cover': './images/classroom.png',
         'task': {
             'name': "write code",
             'action': None
@@ -48,7 +48,7 @@ ROOMS = [
     {
         'name': "Library",
         'action': lambda person: person.increase('knowledge', 5),
-        'cover': 'library.png',
+        'cover': './images/library.png',
         'objects': [
             *coffee
         ],
@@ -64,7 +64,7 @@ ROOMS = [
             {'name': "Protein shake", 'action': lambda person: person.increase('health', 20), 'action_name': 'drink'},
         ],
         'description': "Welcome to the gym. Time to burn those calories! Here you can complete a push up challenge!.",
-        'cover': 'gym.png'
+        'cover': './images/gym.png'
 
     },
     {
@@ -75,7 +75,7 @@ ROOMS = [
             {'name': "Laptop", 'action_name': 'pick up'},
             {'name': "Gym clothes", 'action_name': 'pick up'}
         ],
-        'cover': 'bedroom.png',
+        'cover': './images/bedroom.png',
         'description': "This is your bedroom. Here you can rest and relax and more ;)"
     },
     # Extra rooms:
@@ -89,23 +89,24 @@ ROOM_MATRIX = [
 
 # adding the challenges to the respetcive rooms
 from challenges import pushup, capitals, debug, memory, rps
+import random
 
 PUZZLES = {
         'classroom': {
             'requirements': ['laptop'],
-            'puzzle': debug.run, # random.choice([debug.run, memory.run, capitals.run])
+            'puzzle': random.choice([debug.run, memory.run, capitals.run]),
             'teaser': "You will probably need to use your laptop and coffee to solve this puzzle.",
             'solved': lambda person: person.increase('knowledge', 60)
         },
         'kitchen': {
             'requirements': ['pan'],
-            'puzzle': rps.kitchen_puzzle,
+            'puzzle': rps.run,
             'teaser': "You will probably need to use your pan to solve this puzzle.",
             'solved': lambda person: person.increase('health', 30)
         },
         'gym': {
             'requirements': ['gym clothes'],
-            'puzzle': pushup.gym_puzzle,
+            'puzzle': pushup.run,
             'teaser': "You will probably need to use your gym clothes to solve this puzzle.",
             'solved': lambda person: person.increase('health', 50)
         }

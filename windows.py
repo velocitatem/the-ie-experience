@@ -1,7 +1,7 @@
 # internal dependencies
 from person import Person
 from game_configuration import ROOMS, ROOM_MATRIX, PUZZLES
-from helpers import items_to
+from helpers import items_to, sdts
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QLineEdit, QProgressBar, QGridLayout, QGroupBox, QRadioButton, QMessageBox, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QFont
@@ -13,8 +13,8 @@ class GreetingWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("The IE Experience")
-        self.setFixedSize(500, 500)
-        self.setStyleSheet("background-image: url('IE.png');")
+        self.setFixedSize(*sdts(500, 500))
+        self.setStyleSheet("background-image: url('./images/IE.png');")
 
 
         # Create a central widget and set its layout
@@ -36,6 +36,7 @@ class GreetingWindow(QMainWindow):
         self.button.setFixedSize(100, 50)
         layout.addWidget(self.button)
 
+
     def start_game(self):
         # Close the greeting window
         self.close()
@@ -44,12 +45,16 @@ class GreetingWindow(QMainWindow):
         self.game = GameWindow()
         self.game.show()
 
+        # on close, close the game window
+        self.game.destroyed.connect(self.close)
+
+
 
 class CoverImageWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("The IE Experience")
-        self.setFixedSize(600, 600)
+        self.setFixedSize(*sdts(600, 600))
         self.label = None
 
     def set_image(self, name, file):
@@ -74,7 +79,7 @@ class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("The IE Experience - Game")
-        self.setFixedSize(700, 500)
+        self.setFixedSize(*sdts(700, 500))
 
         self.cover_image = CoverImageWindow()
         self.person = Person()
@@ -89,7 +94,7 @@ class GameWindow(QMainWindow):
 
         # Create the input field
         self.input = QLineEdit(self)
-        self.input.setFixedSize(500, 50)
+        self.input.setFixedSize(*sdts(500, 50))
         self.input.setPlaceholderText("Enter your command here")
         self.input.returnPressed.connect(self.on_input) # When the user presses enter, call on_input
         layout.addWidget(self.input)
@@ -97,7 +102,7 @@ class GameWindow(QMainWindow):
         # Create the position label
         self.position_label = QLabel(self)
         self.position_label.setAlignment(Qt.AlignCenter)
-        self.position_label.setFixedSize(500, 100)
+        self.position_label.setFixedSize(*sdts(500, 100))
         layout.addWidget(self.position_label)
 
         self.update_status_bar()
@@ -116,9 +121,9 @@ class GameWindow(QMainWindow):
         # we create status bars for all the user stats and add them to the layout
         # the staus bars are all in a horizontal layout
         self.status_bar = QGroupBox(self)
-        self.status_bar.setFixedSize(700, 100)
+        self.status_bar.setFixedSize(*sdts(700, 100))
 
-        self.status_bar.move(0, 300)
+        self.status_bar.move(*sdts(0, 300))
         status_layout = QVBoxLayout(self.status_bar)
         for stat in self.person.get_status_report(): # get_status_report returns a list of lits (name, vlaue)
 
@@ -149,9 +154,9 @@ class GameWindow(QMainWindow):
         if dir(self).count('inventory_grid') > 0:
             self.inventory_grid.deleteLater()
         self.inventory_grid = QWidget(self)
-        self.inventory_grid.setFixedSize(500, 100)
+        self.inventory_grid.setFixedSize(*sdts(500, 100))
         # must must be at the bottom of the screen
-        self.inventory_grid.move(0, 400)
+        self.inventory_grid.move(*sdts(0, 400))
         # center it on the screen
 
 
@@ -221,8 +226,6 @@ class GameWindow(QMainWindow):
         print(value)
         if value[0] == "go":
             self.move_rooms(value[1])
-            # update position label
-            # self.position_label.set_markup("<span font_desc='20'>You are in the " + self.person.get_location() + "</span>")
             # in pyqt:
             self.position_label.setText(f"You are in the {self.person.get_location()}")
             # show the cover image
@@ -298,7 +301,7 @@ class GameWindow(QMainWindow):
 
                 if all(conditions):
                     try:
-                        puzzle.run()
+                        puzzle['puzzle']()
                         puzzle['solved'](self.person)
                         self.update_status_bar()
 

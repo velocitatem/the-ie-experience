@@ -243,6 +243,7 @@ def gym_puzzle():
         p = win.getMouse()
 
         if button.clicked(p):
+            gym_person.undraw()
             gym_person.down()
             time.sleep(0.5)
             gym_person.undraw()
@@ -261,10 +262,11 @@ def gym_puzzle():
     win.getMouse()
 
     win.close()
+    return True
 
 def run():
-    puzzle = gym_puzzle()
+    return gym_puzzle()
 
 
-
-
+if __name__ == '__main__':
+    print(gym_puzzle())

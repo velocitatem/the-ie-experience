@@ -49,8 +49,24 @@ class RockPaperScissors:
 
     def run(self):
         while self.user_wins < 3 and self.comp_wins < 3:
-            instructions_text = Text(Point(250, 100), "Choose rock, paper, or scissors:")
+            instructions_text = Text(Point(250, 50), "Choose rock, paper, or scissors:")
             instructions_text.draw(self.win)
+            # draw the buttons
+            rock_button = Rectangle(Point(150, 100), Point(350, 150))
+            rock_button.draw(self.win)
+            rock_text = Text(Point(250, 125), "Rock")
+            rock_text.draw(self.win)
+
+            paper_button = Rectangle(Point(150, 200), Point(350, 250))
+            paper_button.draw(self.win)
+            paper_text = Text(Point(250, 225), "Paper")
+            paper_text.draw(self.win)
+
+            scissors_button = Rectangle(Point(150, 300), Point(350, 350))
+            scissors_button.draw(self.win)
+            scissors_text = Text(Point(250, 325), "Scissors")
+            scissors_text.draw(self.win)
+
 
             choice = None
             while choice not in self.outcomes:
@@ -62,27 +78,39 @@ class RockPaperScissors:
                 elif 150 <= click.getX() <= 350 and 300 <= click.getY() <= 350:
                     choice = "scissors"
 
+            rock_button.undraw()
+            rock_text.undraw()
+            paper_button.undraw()
+            paper_text.undraw()
+            scissors_button.undraw()
+            scissors_text.undraw()
+
             instructions_text.undraw()
 
             self.play(choice)
 
-        self.win.close()
 
+        outcome = False
         if self.user_wins >= 3:
             end_text = Text(Point(250, 350), "Congratulations, you won!")
             end_text.draw(self.win)
+            outcome = True
         else:
             end_text = Text(Point(250, 350), "Sorry, you lost.")
             end_text.draw(self.win)
 
         time.sleep(3)
         end_text.undraw()
-
+        self.win.close()
+        return outcome
 
 def kitchen_puzzle():
     win = GraphWin("Rock Paper Scissors", 500, 700)
     game = RockPaperScissors(win)
-    game.run()
+    return game.run()
 
 def run():
-    kitchen_puzzle()
+    return kitchen_puzzle()
+
+if __name__ == "__main__":
+    print(run())

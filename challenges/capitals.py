@@ -80,15 +80,23 @@ def capitals():
             time.sleep(1)
         countdown_text.setText("")
 
+    won_or_not = None
     if user_score == 3:
         final_text = Text(Point(250, 400), "Congratulations, you won!")
+        won_or_not = True
     else:
         final_text = Text(Point(250, 400), "Sorry, you lost!")
+        won_or_not = False
     final_text.draw(win)
 
     # Wait for click before closing the window
     win.getMouse()
     win.close()
+    return won_or_not
 
 def run():
-    puzzle = capitals()
+    return capitals()
+
+if __name__ == "__main__":
+    print(run())
+
