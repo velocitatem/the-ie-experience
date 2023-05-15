@@ -77,4 +77,4 @@ def debug():
     win.close()
 
 def run():
-    debug()
+    puzzle = debug()

@@ -132,10 +132,12 @@ class GameWindow(QMainWindow):
             stat_layout.addWidget(QProgressBar(self.status_bar))
             stat_layout.itemAt(1).widget().setValue(stat[1])
             status_layout.addLayout(stat_layout)
+
         # status bar must always be at the top of the screen
         self.status_bar.move(0, 0)
         self.layout().addWidget(self.status_bar)
         score = self.person.get_score()
+
         if score > 80:
             self.alert("You have won the game!\nYour score is: " + str(score))
             return
@@ -302,6 +304,16 @@ class GameWindow(QMainWindow):
                         puzzle['puzzle']()
                         puzzle['solved'](self.person)
                         self.update_status_bar()
+
+                        # removes the item used in the challenge from the inventory
+                        for inv_item in self.person.inventory:
+                            if inv_item['name'] != puzzle['requirements']:
+                                item_label = QLabel(inv_item['name'], self.inventory_grid)
+                                self.inventory_layout.addWidget(item_label)
+                        self.person.inventory = [inv_item for inv_item in self.person.inventory if
+                                                 inv_item['name'] != puzzle['requirements']]
+                        self.layout().addWidget(self.inventory_grid)
+
                     except Exception as e:
                         print(e)
 
@@ -311,5 +323,6 @@ class GameWindow(QMainWindow):
         elif value[0] in ['exit', 'die', 'bye']:
             # some game over thing
             sys.exit(0)
+
         else:
             self.alert("I don't understand that command")
