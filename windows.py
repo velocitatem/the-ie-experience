@@ -301,18 +301,20 @@ class GameWindow(QMainWindow):
 
                 if all(conditions):
                     try:
-                        puzzle['puzzle']()
-                        puzzle['solved'](self.person)
-                        self.update_status_bar()
+                        result = puzzle['puzzle']()
+                        print(result)
+                        if result:
+                            puzzle['solved'](self.person)
+                            self.update_status_bar()
 
-                        # removes the item used in the challenge from the inventory
-                        for inv_item in self.person.inventory:
-                            if inv_item['name'] != puzzle['requirements']:
-                                item_label = QLabel(inv_item['name'], self.inventory_grid)
-                                self.inventory_layout.addWidget(item_label)
-                        self.person.inventory = [inv_item for inv_item in self.person.inventory if
-                                                 inv_item['name'] != puzzle['requirements']]
-                        self.layout().addWidget(self.inventory_grid)
+                            # remove requirements from inventory
+                            updated_inventory = [item for item in self.person.inventory if item['name'].lower() not in puzzle['requirements']]
+                            self.person.inventory = updated_inventory
+                            self.update_inventory()
+
+
+
+
 
                     except Exception as e:
                         print(e)
