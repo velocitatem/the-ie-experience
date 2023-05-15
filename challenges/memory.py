@@ -132,4 +132,5 @@ def memory_game():
 def run():
     memory_game()
 
-run()
+if __name__ == "__main__":
+    run()
