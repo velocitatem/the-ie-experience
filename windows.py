@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 import sys
 
-
+# class that creates the game
 class GreetingWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -57,6 +57,7 @@ class CoverImageWindow(QMainWindow):
         self.setFixedSize(*sdts(600, 600))
         self.label = None
 
+    # sets cover image for the game
     def set_image(self, name, file):
         # if we already have a cover image, remove it
         if self.label is not None:
