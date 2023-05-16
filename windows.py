@@ -301,7 +301,10 @@ class GameWindow(QMainWindow):
 
                 if all(conditions):
                     try:
-                        result = puzzle['puzzle']()
+                        try:
+                            result = puzzle['puzzle']()
+                        except Exception as e:
+                            result = False
                         print(result)
                         if result:
                             puzzle['solved'](self.person)
@@ -311,14 +314,8 @@ class GameWindow(QMainWindow):
                             updated_inventory = [item for item in self.person.inventory if item['name'].lower() not in puzzle['requirements']]
                             self.person.inventory = updated_inventory
                             self.update_inventory()
-
-
-
-
-
                     except Exception as e:
                         print(e)
-
                 else:
                     self.alert("You don't have the requirements to complete this puzzle")
 
